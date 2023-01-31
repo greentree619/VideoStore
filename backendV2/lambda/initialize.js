@@ -13,10 +13,13 @@ exports.handler = async (event) => {
     if (!body.name) { 
 		throw new Error("name of the file is required");
 	}
+
+	const now  =  new Date();
+	var baseKey = now.toLocaleDateString("fr-CA") + "/" + AWS.util.uuid.v4() + "/";
   
     const multipartParams = {
 		Bucket: BUCKET_NAME,
-		Key: body.name,
+		Key: baseKey + body.name,
 	}
   
 	const multipartUpload = await s3.createMultipartUpload(multipartParams).promise()
