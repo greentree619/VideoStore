@@ -14,6 +14,12 @@ exports.handler = async (event) => {
 	if (doesFileExist(tmpVideoPath)) {
 		await generateThumbnailsFromVideo(tmpVideoPath, THUMBNAILS_TO_CREATE, videoFileName);
 	}
+
+	const response = {
+        statusCode: 200,
+        body: JSON.stringify({key:videoFileName}),
+    };
+    return response;
 };
 
 const extractParams = event => {
