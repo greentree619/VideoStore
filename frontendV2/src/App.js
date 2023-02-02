@@ -18,7 +18,8 @@ function App() {
         baseURL: baseUrl,
         chunkSize: partsize,
         threadsQuantity: numuploads,
-        useTransferAcceleration: ta 
+        useTransferAcceleration: ta,
+        meetingId: "123456789"
       }
 
       let percentage = undefined

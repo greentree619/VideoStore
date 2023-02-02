@@ -32,6 +32,7 @@ export class Uploader {
     this.onProgressFn = () => {}
     this.onErrorFn = () => {}
     this.baseURL = options.baseURL
+    this.meetingId = options.meetingId
   }
 
   start() {

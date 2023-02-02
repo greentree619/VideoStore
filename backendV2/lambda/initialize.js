@@ -15,11 +15,11 @@ exports.handler = async (event) => {
 	}
 
 	const now  =  new Date();
-	var baseKey = now.toLocaleDateString("fr-CA") + "/" + AWS.util.uuid.v4() + "/";
+	var baseKey = now.toLocaleDateString("fr-CA") + "/";
   
     const multipartParams = {
 		Bucket: BUCKET_NAME,
-		Key: baseKey + body.name,
+		Key: baseKey + body.meetingId + "/" +  + body.name,
 	}
   
 	const multipartUpload = await s3.createMultipartUpload(multipartParams).promise()

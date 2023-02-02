@@ -11,8 +11,8 @@ export class MultipartS3UploadStack extends cdk.Stack {
     const env = cdk.Stack.of(this).node.tryGetContext('env');
     const expires = cdk.Stack.of(this).node.tryGetContext('urlExpiry') ?? '300';
 
-    const s3Bucket = new s3.Bucket(this, "video-upload-bucket", {
-      bucketName: `video-client-upload-${env}`,
+    const s3Bucket = new s3.Bucket(this, "Meeting-video-upload-bucket", {
+      bucketName: `ar-meeting-result`,
       lifecycleRules: [{
         expiration: cdk.Duration.days(10),
         abortIncompleteMultipartUploadAfter: cdk.Duration.days(1),
@@ -62,16 +62,16 @@ export class MultipartS3UploadStack extends cdk.Stack {
       ]
     })
 
-    const apiGateway = new apigw.RestApi(this, 'multi-part-upload-api', {
+    const apiGateway = new apigw.RestApi(this, 'meeting-result-upload-api', {
       description: 'API for multipart s3 upload',
-      restApiName: 'multi-part-upload-api',
+      restApiName: 'meeting-result-upload-api',
       defaultCorsPreflightOptions: {
         allowOrigins: apigw.Cors.ALL_ORIGINS,                
       },
       policy: apiResourcePolicy,
     });
 
-    const initializeLambda = new lambda.Function(this, 'initializeHandler', {
+    const initializeLambda = new lambda.Function(this, 'meetingResult-initializeHandler', {
       runtime: lambda.Runtime.NODEJS_16_X,
       code: lambda.Code.fromAsset('lambda',{
         exclude: ['finalize.js','getPreSignedUrls.js','getPreSignedTAUrls.js','makePreSignedUrls.js']
@@ -80,9 +80,9 @@ export class MultipartS3UploadStack extends cdk.Stack {
       environment: {
         BUCKET_NAME: s3Bucket.bucketName
       },
-      functionName: `multipart-upload-initialize-${env}`
+      functionName: `meeting-result-upload-initialize-${env}`
     });
-    const getPreSignedUrlsLambda = new lambda.Function(this, 'getPreSignedUrlsHandler', {
+    const getPreSignedUrlsLambda = new lambda.Function(this, 'meetingResult-getPreSignedUrlsHandler', {
       runtime: lambda.Runtime.NODEJS_16_X,
       code: lambda.Code.fromAsset('lambda',{
         exclude: ['finalize.js','initialize.js','getPreSignedTAUrls.js']
@@ -92,9 +92,9 @@ export class MultipartS3UploadStack extends cdk.Stack {
         BUCKET_NAME: s3Bucket.bucketName,
         URL_EXPIRES: expires
       },
-      functionName: `multipart-upload-getPreSignedUrls-${env}`
+      functionName: `meeting-result-upload-getPreSignedUrls-${env}`
     });
-    const getPreSignedTAUrlsLambda = new lambda.Function(this, 'getPreSignedTAUrlsHandler', {
+    const getPreSignedTAUrlsLambda = new lambda.Function(this, 'meetingResult-getPreSignedTAUrlsHandler', {
       runtime: lambda.Runtime.NODEJS_16_X,
       code: lambda.Code.fromAsset('lambda',{
         exclude: ['finalize.js','initialize.js','getPreSignedUrls.js']
@@ -104,9 +104,9 @@ export class MultipartS3UploadStack extends cdk.Stack {
         BUCKET_NAME: s3Bucket.bucketName,
         URL_EXPIRES: expires
       },
-      functionName: `multipart-upload-getPreSignedTAUrls-${env}`
+      functionName: `meeting-result-upload-getPreSignedTAUrls-${env}`
     });
-    const finalizeLambda = new lambda.Function(this, 'finalizeHandler', {
+    const finalizeLambda = new lambda.Function(this, 'meetingResult-finalizeHandler', {
       runtime: lambda.Runtime.NODEJS_16_X,
       code: lambda.Code.fromAsset('lambda',{
         exclude: ['getPreSignedUrls.js','initialize.js','getPreSignedTAUrls.js','makePreSignedUrls.js']
@@ -115,7 +115,7 @@ export class MultipartS3UploadStack extends cdk.Stack {
       environment: {
         BUCKET_NAME: s3Bucket.bucketName
       },
-      functionName: `multipart-upload-finalize-${env}`
+      functionName: `meeting-result-upload-finalize-${env}`
     });
 
     s3Bucket.grantReadWrite(initializeLambda);
@@ -129,7 +129,7 @@ export class MultipartS3UploadStack extends cdk.Stack {
     apiGateway.root.addResource('finalize').addMethod('POST', new apigw.LambdaIntegration(finalizeLambda));
 
     apiGateway.addUsagePlan('usage-plan', {
-      name: 'consumerA-multi-part-upload-plan',
+      name: 'consumerA-meeting-result-upload-plan',
       description: 'usage plan for consumerA',
       apiStages: [{
         api: apiGateway,
