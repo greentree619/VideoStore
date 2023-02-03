@@ -47,6 +47,7 @@ export class Uploader {
       // initializing the multipart request
       const videoInitializationUploadInput = {
         name: fileName,
+        meetingId: this.meetingId,
       }
       const initializeReponse = await api.request({
         url: "/initialize",
