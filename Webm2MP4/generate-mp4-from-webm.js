@@ -50,7 +50,7 @@ const uploadFileToS3 = async (tmpMP4Path, nameOfMp4ToCreate) => {
         Bucket: MP4_TARGET_BUCKET,
         Key: nameOfMp4ToCreate,
         Body: contents,
-        ContentType: "image/jpg"
+        ContentType: "video/x-m4v"
     };
 
     const s3 = new AWS.S3();

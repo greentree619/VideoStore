@@ -2,17 +2,19 @@ const fs = require("fs");
 const path = require("path");
 const doesFileExist = require("./does-file-exist");
 const downloadVideoToTmpDirectory = require("./download-video-to-tmp-directory");
-const generateMP4FromWebm = require("./generate-mp4-from-webm");
-
-const THUMBNAILS_TO_CREATE = 2;
+const mergeMP4andWAV = require("./merge-mp4-and-wav");
 
 exports.handler = async (event) => {
     await wipeTmpDirectory();
 	const { videoFileName, triggerBucketName } = extractParams(event);
-	const tmpVideoPath = await downloadVideoToTmpDirectory(triggerBucketName, videoFileName);
+	const wavFileName = videoFileName.replace(".mp4", ".wav");
+	//console.log("Debug=>", videoFileName, wavFileName);
 
-	if (doesFileExist(tmpVideoPath)) {
-		await generateMP4FromWebm(tmpVideoPath, videoFileName);
+	const tmpVideoPath = await downloadVideoToTmpDirectory(triggerBucketName, videoFileName, "mp4");
+	const tmpWAVPath = await downloadVideoToTmpDirectory(triggerBucketName, wavFileName, "wav");	
+
+	if (doesFileExist(tmpVideoPath) && doesFileExist(tmpWAVPath)) {
+		await mergeMP4andWAV(tmpVideoPath, tmpWAVPath, videoFileName);
 	}
 
 	const response = {
