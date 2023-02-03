@@ -39,7 +39,7 @@ const generateMP4Path = () => {
 const createFfmpegParams = (tmpWebmPath, tmpMp4Path) => {
     return [
         "-i", tmpWebmPath,
-        "-crf", 26,
+        //"-crf", 26,
         tmpMp4Path
     ];
 };
