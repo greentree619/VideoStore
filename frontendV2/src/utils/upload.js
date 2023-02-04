@@ -32,7 +32,7 @@ export class Uploader {
     this.onProgressFn = () => {}
     this.onErrorFn = () => {}
     this.baseURL = options.baseURL
-    this.meetingId = options.meetingId
+    this.domain = options.domain
   }
 
   start() {
@@ -47,7 +47,7 @@ export class Uploader {
       // initializing the multipart request
       const videoInitializationUploadInput = {
         name: fileName,
-        meetingId: this.meetingId,
+        domain: this.domain,
       }
       const initializeReponse = await api.request({
         url: "/initialize",

@@ -19,7 +19,7 @@ function App() {
         chunkSize: partsize,
         threadsQuantity: numuploads,
         useTransferAcceleration: ta,
-        meetingId: "123456789"
+        domain: "www.traepiller123.info"
       }
 
       let percentage = undefined

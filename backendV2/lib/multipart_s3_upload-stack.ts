@@ -11,8 +11,8 @@ export class MultipartS3UploadStack extends cdk.Stack {
     const env = cdk.Stack.of(this).node.tryGetContext('env');
     const expires = cdk.Stack.of(this).node.tryGetContext('urlExpiry') ?? '300';
 
-    const s3Bucket = new s3.Bucket(this, "Meeting-video-upload-bucket", {
-      bucketName: `ar-meeting-result`,
+    const s3Bucket = new s3.Bucket(this, "website-upload-bucket", {
+      bucketName: `website-upload-bucket`,
       lifecycleRules: [{
         expiration: cdk.Duration.days(10),
         abortIncompleteMultipartUploadAfter: cdk.Duration.days(1),
