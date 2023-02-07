@@ -149,7 +149,7 @@ export class Uploader {
       this.onErrorFn(error)
     }
   }
-
+  
   async sendCompleteRequest() {
     if (this.fileId && this.fileKey) {
       const videoFinalizationMultiPartInput = {
