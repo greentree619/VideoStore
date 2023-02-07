@@ -20,10 +20,23 @@ def lambda_handler(event, context):
 
         # Extract and upload each file in the zipfile
         for filename in z.namelist():
+            #print('content', filename)
+            hasExtension = len(filename.split('/').pop().split('.')) > 1;
             content_type = guess_type(filename, strict=False)[0]
-            #print('content', content_type, filename)
+            #print('hasExtension', hasExtension, content_type)
+            #args = {'ContentType': content_type}
             if content_type is None:
-                continue
+                if hasExtension:
+                    s3.upload_fileobj(
+                        Fileobj=z.open(filename),
+                        Bucket=dst_bucket,
+                        Key=filename
+                    )
+                    continue
+                else:
+                    continue
+                
+            #print('content_type', content_type, filename, hasExtension);
             s3.upload_fileobj(
                 Fileobj=z.open(filename),
                 Bucket=dst_bucket,
@@ -33,3 +46,10 @@ def lambda_handler(event, context):
     except Exception as e:
         print('Error getting object {zip_key} from bucket {bucket}.')
         raise e
+        
+# def lambda_handler(event, context):
+#     # TODO implement
+#     return {
+#         'statusCode': 200,
+#         'body': json.dumps('Hello from Lambda!')
+#     }
