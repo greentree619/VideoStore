@@ -20,12 +20,17 @@ module.exports = async (tmpVideoPath, numberOfThumbnails, videoFileName) => {
             await uploadFileToS3(tmpThumbnailPath, nameOfImageToCreate);
         }
     }
+    
+    const response = {
+        statusCode: 200,
+        body: JSON.stringify({key:videoFileName}),
+    };
+    return response;
 }
 
 const generateRandomTimes = (tmpVideoPath, numberOfTimesToGenerate) => {
     const timesInSeconds = [];
     const videoDuration = getVideoDuration(tmpVideoPath);
-
     for (let x = 0; x < numberOfTimesToGenerate; x++) {
         const randomNum = getRandomNumberNotInExistingList(timesInSeconds, videoDuration);
         
@@ -71,7 +76,6 @@ const createImageFromVideo = (tmpVideoPath, targetSecond) => {
     const tmpThumbnailPath = generateThumbnailPath(targetSecond);
     const ffmpegParams = createFfmpegParams(tmpVideoPath, tmpThumbnailPath, targetSecond);
     spawnSync(ffmpegPath, ffmpegParams);
-
     return tmpThumbnailPath;
 };
 
