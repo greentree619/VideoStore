@@ -8,7 +8,9 @@ import mimetypes
 s3 = boto3.client('s3')
 
 def lambda_handler(event, context):
-    url = "https://i.stack.imgur.com/38FoP.jpg?s=64&g=1"  # Replace with the URL of the file you want to download
+    # url = "https://i.stack.imgur.com/38FoP.jpg?s=64&g=1"  # Replace with the URL of the file you want to download
+    request = json.loads(event["body"])
+    url = request["url"]
     bucket_name = "article-image-bucket-live"  # Replace with your S3 bucket name
     
     # Download the file from the URL
@@ -27,13 +29,17 @@ def lambda_handler(event, context):
         
         return {
             'statusCode': 200,
-            'body': 'File downloaded and saved to S3 bucket'
+            'body': {"key":key}
         }
     else:
         return {
             'statusCode': response.status_code,
-            'body': 'Failed to download file from URL'
+            'body': {"key": ""}
         }
+    # return {
+    #     'statusCode': response.status_code,
+    #     'body': url
+    # }
 
 def get_date():
     current_datetime = datetime.now()
