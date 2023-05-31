@@ -1,0 +1,33 @@
+{
+    "Version": "2012-10-17",
+    "Statement": [
+        {
+            "Effect": "Allow",
+            "Principal": {
+                "AWS": [
+                    "arn:aws:iam::031023765277:role/service-role/imageThumbGenerator-role-t9fui5ht",
+                    "arn:aws:iam::031023765277:role/service-role/DownloadImageFromOpenAILink-role-1omypu63"
+                ]
+            },
+            "Action": "s3:*",
+            "Resource": [
+                "arn:aws:s3:::article-image-thumbnails-bucket-live",
+                "arn:aws:s3:::article-image-thumbnails-bucket-live/*"
+            ],
+            "Condition": {
+                "Bool": {
+                    "aws:SecureTransport": "false"
+                }
+            }
+        },
+        {
+            "Sid": "VisualEditor1",
+            "Effect": "Allow",
+            "Principal": {
+                "AWS": "*"
+            },
+            "Action": "s3:GetObject",
+            "Resource": "arn:aws:s3:::article-image-thumbnails-bucket-live/*"
+        }
+    ]
+}
