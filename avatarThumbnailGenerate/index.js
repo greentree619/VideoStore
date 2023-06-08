@@ -12,8 +12,8 @@ exports.handler = async (event, context) => {
     console.log("source bueckt info:", event.Records[0].s3.bucket.name, event.Records[0].s3.object.key);
     const sourceBucket = event.Records[0].s3.bucket.name;
     const sourceKey = decodeURIComponent(event.Records[0].s3.object.key.replace(/\+/g, ' '));
-    const destinationBucket = sourceBucket;
-    const destinationKey = `${getThumbnailObjKey(sourceKey)}`;
+    const destinationBucket = "perfectself-avatar-thumb-bucket";
+    const destinationKey = `${sourceKey}`;
 
     console.log("file name: ", destinationKey);
 
